@@ -1,0 +1,22 @@
+.formContainer {
+  background-color: #233142;
+  height: 180px;
+  width: 400px;
+  color: #e3e3e3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+h2 {
+  font-weight: normal;
+}
+
+input {
+  outline: none;
+}
+
+p {
+  color: #d8000c;
+}
