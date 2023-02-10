@@ -3,12 +3,14 @@ import './App.css';
 import axios from 'axios';
 import Converter from './components/Converter/Converter';
 
-function App() {
+const App = () => {
   const api_URL = 'https://api.nbp.pl/api/exchangerates/tables/a/?format=json';
 
-  const [usdRate, setUsdRate] = useState('');
-  const [eurRate, setEurRate] = useState('');
-  const [chfRate, setChfRate] = useState('');
+  const [usdRate, setUsdRate] = useState<string>('');
+  const [eurRate, setEurRate] = useState<string>('');
+  const [chfRate, setChfRate] = useState<string>('');
+
+  const [currencyRates, setCurrencyRates] = useState([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -18,9 +20,9 @@ function App() {
       .get(api_URL)
       .then((response) => {
         const prices = response.data[0].rates;
-        const usd = prices.filter((rate: any) => rate.code === 'USD')[0].mid;
-        const eur = prices.filter((rate: any) => rate.code === 'EUR')[0].mid;
-        const chf = prices.filter((rate: any) => rate.code === 'CHF')[0].mid;
+        const usd = prices.filter((rate) => rate.code === 'USD')[0].mid;
+        const eur = prices.filter((rate) => rate.code === 'EUR')[0].mid;
+        const chf = prices.filter((rate) => rate.code === 'CHF')[0].mid;
 
         setUsdRate(usd);
         setEurRate(eur);
@@ -30,6 +32,7 @@ function App() {
       })
       .catch((error) => {
         window.alert(error);
+        setIsLoading(false);
       });
   }, []);
 
@@ -46,6 +49,6 @@ function App() {
       </div>
     </Fragment>
   );
-}
+};
 
 export default App;
