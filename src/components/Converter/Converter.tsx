@@ -56,7 +56,7 @@ const Converter: React.FunctionComponent = () => {
     <div className="formContainer">
       <input
         type="number"
-        placeholder="Currency"
+        placeholder="Value to calculate"
         value={currencyInput}
         onChange={(event) => setCurrencyInput(event.target.value)}
         min={0}
