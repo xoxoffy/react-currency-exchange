@@ -9,6 +9,10 @@
   flex-wrap: wrap;
 }
 
+.formContainer button {
+  margin-left: 15px;
+}
+
 h2 {
   font-weight: normal;
 }
