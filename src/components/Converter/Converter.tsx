@@ -1,8 +1,12 @@
 import './Converter.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Loader from './../Loader';
 import ConverterResults from './ConverterResult/ConverterResult';
 import axios from 'axios';
+
+interface prices {
+  code: string;
+}
 
 const Converter: React.FunctionComponent = () => {
   const api_URL = 'https://api.nbp.pl/api/exchangerates/tables/a/?format=json';
@@ -11,6 +15,7 @@ const Converter: React.FunctionComponent = () => {
   const [currencyType, setCurrencyType] = useState<string>('USD');
   const [calculatedExchange, setCalculatedExchange] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCalculated, setIsCalculated] = useState<boolean>(false);
 
   const calculateExchange = () => {
     if (!currencyInput || Number(currencyInput) < 0) return;
@@ -19,9 +24,9 @@ const Converter: React.FunctionComponent = () => {
       .get(api_URL)
       .then((response) => {
         const prices = response.data[0].rates;
-        const usd = prices.filter((rate) => rate.code === 'USD')[0].mid;
-        const eur = prices.filter((rate) => rate.code === 'EUR')[0].mid;
-        const chf = prices.filter((rate) => rate.code === 'CHF')[0].mid;
+        const usd = prices.filter((rate: prices) => rate.code === 'USD')[0].mid;
+        const eur = prices.filter((rate: prices) => rate.code === 'EUR')[0].mid;
+        const chf = prices.filter((rate: prices) => rate.code === 'CHF')[0].mid;
 
         if (currencyType === 'USD') {
           setCalculatedExchange(Number(currencyInput) * usd);
@@ -30,7 +35,7 @@ const Converter: React.FunctionComponent = () => {
         } else if (currencyType === 'CHF') {
           setCalculatedExchange(Number(currencyInput) * chf);
         }
-
+        setIsCalculated(true);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -38,6 +43,14 @@ const Converter: React.FunctionComponent = () => {
         setIsLoading(false);
       });
   };
+
+  useEffect(() => {
+    calculateExchange();
+  }, [currencyType]);
+
+  useEffect(() => {
+    setIsCalculated(false);
+  }, [currencyInput]);
 
   return (
     <div className="formContainer">
@@ -69,6 +82,7 @@ const Converter: React.FunctionComponent = () => {
           currencyInput={currencyInput}
           currencyType={currencyType}
           calculatedExchange={calculatedExchange}
+          isCalculated={isCalculated}
         />
       )}
     </div>

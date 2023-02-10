@@ -3,10 +3,6 @@ import './App.css';
 
 import Converter from './components/Converter/Converter';
 
-interface prices {
-  code: string;
-}
-
 const App = () => {
   return (
     <Fragment>
