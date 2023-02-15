@@ -1,10 +1,10 @@
-import './Converter.css';
 import { useState, useEffect } from 'react';
 import Loader from './../Loader';
 import ConverterResults from './ConverterResult/ConverterResult';
 import axios from 'axios';
+import './Converter.css';
 
-interface prices {
+interface Rate {
   code: string;
 }
 
@@ -24,9 +24,9 @@ const Converter: React.FunctionComponent = () => {
       .get(api_URL)
       .then((response) => {
         const prices = response.data[0].rates;
-        const usd = prices.filter((rate: prices) => rate.code === 'USD')[0].mid;
-        const eur = prices.filter((rate: prices) => rate.code === 'EUR')[0].mid;
-        const chf = prices.filter((rate: prices) => rate.code === 'CHF')[0].mid;
+        const usd = prices.filter((rate: Rate) => rate.code === 'USD')[0].mid;
+        const eur = prices.filter((rate: Rate) => rate.code === 'EUR')[0].mid;
+        const chf = prices.filter((rate: Rate) => rate.code === 'CHF')[0].mid;
 
         if (currencyType === 'USD') {
           setCalculatedExchange(Number(currencyInput) * usd);
