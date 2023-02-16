@@ -13,12 +13,23 @@ const Converter: React.FunctionComponent = () => {
 
   const [currencyInput, setCurrencyInput] = useState<string>('');
   const [currencyType, setCurrencyType] = useState<string>('USD');
+  const [hasInputError, setHasInputError] = useState<boolean>(false);
+  const [enteredInput, setEnteredInput] = useState<string>('');
+  const [selectedCurrencyType, setSelectedCurrencyType] = useState<string>('');
   const [calculatedExchange, setCalculatedExchange] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isCalculated, setIsCalculated] = useState<boolean>(false);
 
-  const calculateExchange = () => {
-    if (!currencyInput || Number(currencyInput) < 0) return;
+  const calculateExchange = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!currencyInput) {
+      setHasInputError(true);
+      setIsCalculated(false);
+      return;
+    } else {
+      setHasInputError(false);
+    }
 
     axios
       .get(api_URL)
@@ -42,45 +53,47 @@ const Converter: React.FunctionComponent = () => {
         window.alert(error);
         setIsLoading(false);
       });
+
+    setEnteredInput(currencyInput);
+    setSelectedCurrencyType(currencyType);
   };
-
-  useEffect(() => {
-    calculateExchange();
-  }, [currencyType]);
-
-  useEffect(() => {
-    setIsCalculated(false);
-  }, [currencyInput]);
 
   return (
     <div className="formContainer">
-      <input
-        type="number"
-        placeholder="Value to calculate"
-        value={currencyInput}
-        onChange={(event) => setCurrencyInput(event.target.value)}
-        min={0}
-      />
-      <select
-        onChange={(event) => {
-          setCurrencyType(event.target.value);
-        }}
-      >
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="CHF">CHF</option>
-      </select>
+      <form onSubmit={calculateExchange}>
+        <input
+          type="number"
+          placeholder="Value to calculate"
+          value={currencyInput}
+          onChange={(event) => setCurrencyInput(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'e' || event.key === '-' || event.key === '+') {
+              event.preventDefault();
+            }
+          }}
+          min={0}
+        />
+        <select
+          onChange={(event) => {
+            setCurrencyType(event.target.value);
+          }}
+        >
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="CHF">CHF</option>
+        </select>
 
-      <button onClick={calculateExchange}>Calculate</button>
+        <button type="submit">Calculate</button>
+      </form>
 
       {isLoading ? <Loader /> : null}
 
-      {Number(currencyInput) < 0 ? (
-        <p>Please enter an amount greater than 0 </p>
+      {hasInputError ? (
+        <span className="errorMsg">Please enter a valid number. </span>
       ) : (
         <ConverterResults
-          currencyInput={currencyInput}
-          currencyType={currencyType}
+          enteredInput={enteredInput}
+          selectedCurrencyType={selectedCurrencyType}
           calculatedExchange={calculatedExchange}
           isCalculated={isCalculated}
         />

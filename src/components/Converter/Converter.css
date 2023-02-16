@@ -21,6 +21,6 @@ input {
   outline: none;
 }
 
-p {
+.errorMsg {
   color: #d8000c;
 }

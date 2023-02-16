@@ -2,22 +2,22 @@ import { Fragment } from 'react';
 import './ConverterResult.css';
 
 interface Props {
-  currencyInput: string;
-  currencyType: string;
+  enteredInput: string;
+  selectedCurrencyType: string;
   calculatedExchange: number;
   isCalculated: boolean;
 }
 
 const ConverterResults: React.FunctionComponent<Props> = ({
-  currencyInput,
-  currencyType,
+  enteredInput,
+  selectedCurrencyType,
   calculatedExchange,
   isCalculated,
 }) => {
   return (
     <Fragment>
       {isCalculated ? (
-        <span className="currencyResultSpan">{`${currencyInput} ${currencyType} = ${calculatedExchange.toFixed(
+        <span className="currencyResultSpan">{`${enteredInput} ${selectedCurrencyType} = ${calculatedExchange.toFixed(
           2
         )} PLN`}</span>
       ) : null}
